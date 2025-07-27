@@ -1,0 +1,703 @@
+<!DOCTYPE html> 
+<html lang="en" class="scroll-smooth"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Elevated Beyond Building Africa (EBBA)</title> 
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
+    
+    <style> 
+        :root { 
+            --ebba-gold: #D4AF37; /* Gold color from logo */ 
+            --ebba-dark-green: #0A3D2F; /* Dark green from logo */ 
+            --ebba-light-gray: #f0f2f5; 
+            --ebba-text-gray: #333333; /* Slightly darker text for readability */ 
+            --neon-glow-color: #FFD700; /* A bright gold/yellow for the neon glow */ 
+        } 
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--ebba-light-gray); 
+            color: var(--ebba-text-gray); 
+            overflow-x: hidden; /* Prevent horizontal scroll from animations */ 
+        } 
+
+        /* Custom scrollbar for better aesthetics */ 
+        ::-webkit-scrollbar { 
+            width: 10px; 
+        } 
+        ::-webkit-scrollbar-track { 
+            background: var(--ebba-light-gray); 
+        } 
+        ::-webkit-scrollbar-thumb { 
+            background: var(--ebba-gold); 
+            border-radius: 5px; 
+        } 
+        ::-webkit-scrollbar-thumb:hover { 
+            background: #C09A2C; /* Slightly darker gold on hover */ 
+        } 
+
+        /* Custom Tailwind Colors */ 
+        .text-ebba-gold { color: var(--ebba-gold); } 
+        .bg-ebba-dark-green { background-color: var(--ebba-dark-green); } 
+        .border-ebba-gold { border-color: var(--ebba-gold); } 
+        .text-ebba-dark-green { color: var(--ebba-dark-green); } 
+
+        /* Card Animation Base */ 
+        .card-animate { 
+            transition: transform 0.4s ease-out, box-shadow 0.4s ease-out; /* Removed background-color from transition */ 
+            will-change: transform, box-shadow; 
+            position: relative; 
+            overflow: hidden; /* For subtle background effects */ 
+        } 
+
+        .card-animate:hover { 
+            transform: translateY(-8px) scale(1.02); /* Retained for "open a bit like a card" effect */ 
+            /* Added neon glow effect using multiple box-shadows */ 
+            box-shadow: 0 0 20px 8px var(--neon-glow-color),  
+                        0 0 30px 12px rgba(255, 215, 0, 0.4); /* Second, wider shadow for deeper glow */ 
+            /* Removed background-color change on hover */ 
+        } 
+
+        .card-animate::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 5px; /* Gold top border on card */ 
+            background-color: var(--ebba-gold); 
+            transform: translateX(-100%); 
+            transition: transform 0.4s ease-out; 
+        } 
+
+        .card-animate:hover::before { 
+            transform: translateX(0); 
+        } 
+
+        /* Hero Section Text Animation */ 
+        @keyframes fadeInDown { 
+            from { opacity: 0; transform: translateY(-20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        } 
+
+        @keyframes fadeInUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        } 
+
+        .animate-fade-in-down { 
+            animation: fadeInDown 1s ease-out forwards; 
+        } 
+
+        .animate-fade-in-up { 
+            animation: fadeInUp 1s ease-out forwards; 
+            animation-delay: 0.3s; /* Delay for paragraph */ 
+        } 
+
+        .animate-zoom-in { 
+            animation: scaleIn 0.8s ease-out forwards; 
+            animation-delay: 0.6s; /* Delay for button */ 
+        } 
+
+        @keyframes scaleIn { 
+            from { opacity: 0; transform: scale(0.9); } 
+            to { opacity: 1; transform: scale(1); } 
+        } 
+
+        /* Scroll Reveal Effect (more advanced) */ 
+        .scroll-reveal { 
+            opacity: 0; 
+            transform: translateY(20px); 
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out; 
+        } 
+
+        .scroll-reveal.visible { 
+            opacity: 1; 
+            transform: translateY(0); 
+        } 
+
+        /* Mobile Menu Transition */ 
+        #mobile-menu { 
+            transition: all 0.3s ease-in-out; 
+            max-height: 0; 
+            overflow: hidden; 
+        } 
+        #mobile-menu.open { 
+            max-height: 500px; /* Adjust as needed */ 
+        } 
+
+        /* Image hover effect */ 
+        .image-hover-effect { 
+            transition: transform 0.4s ease-in-out, filter 0.4s ease-in-out; 
+        } 
+        .image-hover-effect:hover { 
+            transform: scale(1.05); 
+            filter: brightness(1.1); 
+        } 
+
+        /* Gradient overlay for hero */ 
+        .hero-overlay { 
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7)); 
+        } 
+
+        /* Responsive adjustments */ 
+        @media (max-width: 768px) { 
+            .hero-text-container { 
+                padding: 1.5rem; 
+                border-radius: 0.75rem; 
+            } 
+            .hero-text-container h1 { 
+                font-size: 3rem; /* Adjust for smaller screens */ 
+            } 
+            .hero-text-container p { 
+                font-size: 1rem; 
+            } 
+        } 
+        /* Add this to your <style> block */
+.nav-item-animated {
+    @apply text-white relative overflow-hidden font-medium px-3 py-2 rounded-md; /* Tailwind's @apply to pull in common styles */
+    transition: color 0.3s ease-in-out, transform 0.3s ease-in-out; /* Add transform to transition */
+    transform: translateY(0); /* Ensure initial state */
+}
+
+.nav-item-animated::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--ebba-gold);
+    transform: translateX(-100%); /* Start off-screen to the left */
+    transition: transform 0.3s ease-out;
+}
+
+.nav-item-animated:hover {
+    color: var(--ebba-gold); /* Existing color change */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.nav-item-animated:hover::after {
+    transform: translateX(0); /* Slide in the underline */
+}
+
+/* For the mobile menu, you might want to keep it simpler or apply a different effect */
+#mobile-menu a {
+    /* ... existing styles ... */
+    transition: all 0.2s ease-in-out; /* Keep simple transition for mobile */
+}
+#mobile-menu a:hover {
+    color: var(--ebba-gold);
+    background-color: rgba(255, 255, 255, 0.1); /* Subtle background change on mobile hover */
+}
+    </style> 
+</head> 
+<body class="bg-gray-100 text-gray-800"> 
+
+    <nav class="bg-ebba-dark-green p-4 shadow-lg fixed w-full z-50"> 
+        <div class="container mx-auto flex justify-between items-center"> 
+            <a href="#home" class="text-white text-2xl font-extrabold flex items-center rounded-lg p-2 hover:bg-gray-800 transition duration-300"> 
+                <img src="images/Ebba.logo.png" alt="EBBA Logo" class="h-10 w-10 mr-3 rounded-full"> 
+                EBBA 
+            </a> 
+            <div class="hidden md:flex space-x-6"> 
+                <a href="#home" class="text-white hover:text-ebba-gold transition duration-300 font-medium px-3 py-2 rounded-md">Home</a> 
+                <a href="#about" class="text-white hover:text-ebba-gold transition duration-300 font-medium px-3 py-2 rounded-md">About Us</a> 
+                <a href="#values" class="text-white hover:text-ebba-gold transition duration-300 font-medium px-3 py-2 rounded-md">Values</a> 
+                <a href="#programs" class="text-white hover:text-ebba-gold transition duration-300 font-medium px-3 py-2 rounded-md">Programs</a> 
+                <a href="#leadership" class="text-white hover:text-ebba-gold transition duration-300 font-medium px-3 py-2 rounded-md">Leadership</a> 
+                <a href="#membership" class="text-white hover:text-ebba-gold transition duration-300 font-medium px-3 py-2 rounded-md">Membership</a> 
+                <a href="#contact" class="text-white hover:text-ebba-gold transition duration-300 font-medium px-3 py-2 rounded-md">Contact</a> 
+            </div> 
+            <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none" aria-label="Toggle mobile menu"> 
+                <i class="fas fa-bars text-2xl"></i> 
+            </button> 
+        </div> 
+        <div id="mobile-menu" class="md:hidden bg-ebba-dark-green mt-4 rounded-lg shadow-lg"> 
+            <a href="#home" class="block text-white hover:text-ebba-gold py-3 px-4 transition duration-300 border-b border-gray-700" onclick="document.getElementById('mobile-menu').classList.remove('open');">Home</a> 
+            <a href="#about" class="block text-white hover:text-ebba-gold py-3 px-4 transition duration-300 border-b border-gray-700" onclick="document.getElementById('mobile-menu').classList.remove('open');">About Us</a> 
+            <a href="#values" class="block text-white hover:text-ebba-gold py-3 px-4 transition duration-300 border-b border-gray-700" onclick="document.getElementById('mobile-menu').classList.remove('open');">Values</a> 
+            <a href="#programs" class="block text-white hover:text-ebba-gold py-3 px-4 transition duration-300 border-b border-gray-700" onclick="document.getElementById('mobile-menu').classList.remove('open');">Programs</a> 
+            <a href="#leadership" class="block text-white hover:text-ebba-gold py-3 px-4 transition duration-300 border-b border-gray-700" onclick="document.getElementById('mobile-menu').classList.remove('open');">Leadership</a> 
+            <a href="#membership" class="block text-white hover:text-ebba-gold py-3 px-4 transition duration-300 border-b border-gray-700" onclick="document.getElementById('mobile-menu').classList.remove('open');">Membership</a> 
+            <a href="#contact" class="block text-white hover:text-ebba-gold py-3 px-4 transition duration-300" onclick="document.getElementById('mobile-menu').classList.remove('open');">Contact</a> 
+        </div> 
+    </nav> 
+
+    <section id="home" class="relative bg-cover bg-center h-screen flex items-center justify-center text-white" style="background-image: url('images/EVENT\ YOUTH.jpg');"> 
+        <div class="absolute inset-0 bg-black opacity-60 hero-overlay"></div> 
+        <div class="container mx-auto text-center relative z-10 p-6 rounded-lg bg-black bg-opacity-40 max-w-4xl shadow-2xl hero-text-container"> 
+            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-4 text-ebba-gold animate-fade-in-down"> 
+                Elevated Beyond Building Africa 
+            </h1> 
+            <p class="text-xl md:text-2xl mb-8 font-light italic animate-fade-in-up"> 
+                "Tomorrow is Now." 
+            </p> 
+            <p class="text-lg md:text-xl mb-10 animate-fade-in-up"> 
+                Empowering Zimbabwean youth to unlock and nurture their creative, academic, and entrepreneurial potential. 
+            </p> 
+            <a href="#about" class="bg-ebba-gold text-ebba-dark-green hover:bg-yellow-600 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 animate-zoom-in"> 
+                Learn More About Us 
+            </a> 
+        </div> 
+    </section> 
+
+    <section id="about" class="py-16 md:py-24 bg-white"> 
+        <div class="container mx-auto px-6"> 
+            <h2 class="text-4xl font-bold text-center text-ebba-dark-green mb-12 scroll-reveal">About EBBA</h2> 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center scroll-reveal"> 
+                <div> 
+                    <h3 class="text-3xl font-semibold text-gray-900 mb-6">Meet EBBA</h3> 
+                    <p class="text-lg leading-relaxed text-gray-700 mb-4"> 
+                        We, the founding members of Elevated Beyond Building Africa (EBBA), recognize the need to harness the creative, intellectual, and entrepreneurial potential of Zimbabwean youth, particularly those in high schools and tertiary institutions. 
+                    </p> 
+                    <p class="text-lg leading-relaxed text-gray-700"> 
+                        Acknowledging that young people are not only the leaders of tomorrow but the architects of Africa’s present and future, we hereby establish this Constitution to govern a youth-led, youth-driven association committed to empowering, nurturing, promoting, creating, and championing inclusive development. Rooted in inclusivity, innovation, and integrity, EBBA is committed to elevating young people to realize their full potential. 
+                    </p> 
+                </div> 
+                <div class="flex justify-center items-center"> 
+                    <img src="images/youth.jpg" alt="Youth Empowerment" class="rounded-xl shadow-xl image-hover-effect w-full max-w-md"> 
+                </div> 
+            </div> 
+
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center"> 
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <i class="fas fa-eye text-5xl text-ebba-gold mb-4"></i> 
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Our Vision</h3> 
+                    <p class="text-md text-gray-700"> 
+                        To empower Zimbabwean youth by unlocking and nurturing their creative, academic, and entrepreneurial potential, envisioning a future where every young person transforms their passion into opportunity through innovation, digital tools, and mentorship. 
+                    </p> 
+                </div> 
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <i class="fas fa-bullseye text-5xl text-ebba-gold mb-4"></i> 
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Our Mission</h3> 
+                    <p class="text-md text-gray-700"> 
+                        To cultivate a generation of confident, skilled, and self-sustaining young Zimbabweans who use their talents in art, culture, public speaking, and digital media to shape their futures and contribute meaningfully to national and continental development. 
+                    </p> 
+                </div> 
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <i class="fas fa-trophy text-5xl text-ebba-gold mb-4"></i> 
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Strategic Goals</h3> 
+                    <ul class="text-md text-gray-700 list-disc list-inside text-left mx-auto max-w-xs"> 
+                        <li>Provide inclusive platforms for talent development.</li> 
+                        <li>Transform talents into income opportunities.</li> 
+                        <li>Promote digital literacy and innovation.</li> 
+                        <li>Offer mentorship and capacity-building.</li> 
+                        <li>Support SDG 8: Decent Work and Economic Growth.</li> 
+                        <li>Amplify marginalized youth voices.</li> 
+                        <li>Foster pan-African youth identity.</li> 
+                        <li>Maintain non-partisan, youth-led leadership.</li> 
+                    </ul> 
+                </div> 
+            </div> 
+        </div> 
+    </section> 
+
+    <section id="values" class="py-16 md:py-24 bg-ebba-dark-green text-white"> 
+        <div class="container mx-auto px-6 text-center"> 
+            <h2 class="text-4xl font-bold text-ebba-gold mb-12 scroll-reveal">Our Core Values</h2> 
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"> 
+                <div class="bg-gray-800 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <i class="fas fa-hand-holding-heart text-5xl text-ebba-gold mb-4"></i> 
+                    <h3 class="text-2xl font-semibold mb-4">Empowerment</h3> 
+                    <p class="text-lg">We equip youth with the tools, skills, and confidence to lead, create, and drive impact.</p> 
+                </div> 
+                <div class="bg-gray-800 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <i class="fas fa-users-gear text-5xl text-ebba-gold mb-4"></i> 
+                    <h3 class="text-2xl font-semibold mb-4">Leadership</h3> 
+                    <p class="text-lg">We nurture the leadership potential of every young person through mentorship, service, and responsibility.</p> 
+                </div> 
+                <div class="bg-gray-800 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <i class="fas fa-people-group text-5xl text-ebba-gold mb-4"></i> 
+                    <h3 class="text-2xl font-semibold mb-4">Inclusion</h3> 
+                    <p class="text-lg">We promote diversity and equitable access regardless of gender, background, or ability.</p> 
+                </div> 
+                <div class="bg-gray-800 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <i class="fas fa-lightbulb text-5xl text-ebba-gold mb-4"></i> 
+                    <h3 class="text-2xl font-semibold mb-4">Innovation</h3> 
+                    <p class="text-lg">We champion forward-thinking solutions and the use of digital tools to address youth challenges.</p> 
+                </div> 
+                <div class="bg-gray-800 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <i class="fas fa-paint-brush text-5xl text-ebba-gold mb-4"></i> 
+                    <h3 class="text-2xl font-semibold mb-4">Creativity</h3> 
+                    <p class="text-lg">We honour originality and support the transformation of creative ideas into real-world change.</p> 
+                </div> 
+                <div class="bg-gray-800 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <i class="fas fa-shield-alt text-5xl text-ebba-gold mb-4"></i> 
+                    <h3 class="text-2xl font-semibold mb-4">Integrity</h3> 
+                    <p class="text-lg">We uphold transparency, accountability, and ethical leadership in all decisions and actions.</p> 
+                </div> 
+            </div> 
+        </div> 
+    </section> 
+
+    <section id="programs" class="py-16 md:py-24 bg-white"> 
+        <div class="container mx-auto px-6"> 
+            <h2 class="text-4xl font-bold text-center text-ebba-dark-green mb-12 scroll-reveal">Our Programs</h2> 
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10"> 
+
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <h3 class="text-3xl font-bold text-ebba-dark-green mb-4"> 
+                        <i class="fas fa-handshake text-ebba-gold mr-3"></i>Youth Leadership, Advocacy & Empowerment 
+                    </h3> 
+                    <p class="text-lg text-gray-700 mb-6"> 
+                        Focuses on civic participation, life skills, youth rights, SDG education, public speaking, and mentorship. 
+                    </p> 
+                    <h4 class="text-xl font-semibold text-gray-800 mb-3">Mandate:</h4> 
+                    <ul class="list-disc list-inside text-gray-700 mb-6"> 
+                        <li>Equip youth with leadership, public speaking, and self-mastery skills.</li> 
+                        <li>Promote civic responsibility and positive national identity.</li> 
+                        <li>Train youth in digital advocacy, policy dialogue, and grassroots mobilization.</li> 
+                    </ul> 
+                    <h4 class="text-xl font-semibold text-gray-800 mb-3">Flagship Activities:</h4> 
+                    <ul class="list-disc list-inside text-gray-700"> 
+                        <li>Next Gen Zimbabwe Championships (Debate, quiz, public speaking)</li> 
+                        <li>Leadership Bootcamps (Soft skills, teamwork, mentorship)</li> 
+                        <li>Advocacy Masterclasses (Tackling drug abuse, mental health, gender equality)</li> 
+                        <li>Civic Roadshows (Awareness campaigns in schools and communities)</li> 
+                        <li>“My Africa” Week (Black pride and Pan-African consciousness events)</li> 
+                    </ul> 
+                </div> 
+
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <h3 class="text-3xl font-bold text-ebba-dark-green mb-4"> 
+                        <i class="fas fa-palette text-ebba-gold mr-3"></i>Talent & Creative Innovation 
+                    </h3> 
+                    <p class="text-lg text-gray-700 mb-6"> 
+                        Focuses on artistic, literary, performance, fashion, and digital storytelling talents. 
+                    </p> 
+                    <h4 class="text-xl font-semibold text-gray-800 mb-3">Mandate:</h4> 
+                    <ul class="list-disc list-inside text-gray-700 mb-6"> 
+                        <li>Empower youth in visual and performing arts, fashion, literature, and content creation.</li> 
+                        <li>Reclaim and modernize African cultural identity through creative youth-led platforms.</li> 
+                        <li>Enable creators to monetize their skills through exhibitions, publications, and digital platforms.</li> 
+                    </ul> 
+                    <h4 class="text-xl font-semibold text-gray-800 mb-3">Flagship Activities:</h4> 
+                    <ul class="list-disc list-inside text-gray-700"> 
+                        <li>Canvas Clash (National art & fashion design competition)</li> 
+                        <li>ZimSpark Creative Gala (Annual youth talent and innovation show)</li> 
+                        <li>VIBEfest (Music and dance festival for high schools)</li> 
+                        <li>Express Me Bootcamp (Digital content creation & storytelling)</li> 
+                        <li>Youth Author Publishing Program (End-to-end support for young writers)</li> 
+                        <li>“Echoes of Ubuntu” (Afrocentric art & fashion showcase)</li> 
+                        <li>Gogo Neni Chronicles (African storytelling revival events)</li> 
+                    </ul> 
+                </div> 
+
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <h3 class="text-3xl font-bold text-ebba-dark-green mb-4"> 
+                        <i class="fas fa-laptop-code text-ebba-gold mr-3"></i>Digital Skills, Education & Entrepreneurship 
+                    </h3> 
+                    <p class="text-lg text-gray-700 mb-6"> 
+                        Focuses on digital literacy, exam prep, tech use (AI, publishing, platforms), and youth-owned businesses. 
+                    </p> 
+                    <h4 class="text-xl font-semibold text-gray-800 mb-3">Mandate:</h4> 
+                    <ul class="list-disc list-inside text-gray-700 mb-6"> 
+                        <li>Prepare youth to excel academically and thrive in the digital economy.</li> 
+                        <li>Support income generation through digital tools and entrepreneurship.</li> 
+                        <li>Develop innovative thinkers with practical business and tech skills.</li> 
+                    </ul> 
+                    <h4 class="text-xl font-semibold text-gray-800 mb-3">Flagship Activities:</h4> 
+                    <ul class="list-disc list-inside text-gray-700"> 
+                        <li>“How to Pass ZIMSEC” eBook Series + WhatsApp Revision Hubs</li> 
+                        <li>Study Bootcamps (Peer tutoring + mock exam simulations)</li> 
+                        <li>Side Hustle Masterclass (Youth-led business incubation sessions)</li> 
+                        <li>Zimbabwe’s Next Big Thing (Innovation tournaments)</li> 
+                        <li>Artist Marketplace & Publishing Platforms (Youth authors and designers go digital)</li> 
+                        <li>Partnerships with SME platforms, Youth Business Trust, and AI tools for book/art production.</li> 
+                    </ul> 
+                </div> 
+            </div> 
+        </div> 
+    </section> 
+
+    <section id="events" class="py-16 md:py-24 bg-gray-100"> 
+        <div class="container mx-auto px-6 text-center"> 
+            <h2 class="text-4xl font-bold text-ebba-dark-green mb-12 scroll-reveal">Our Events in Action</h2> 
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"> 
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-animate scroll-reveal"> 
+                    <img src="https://placehold.co/600x400/0A3D2F/D4AF37/png?text=Youth+Leadership+Bootcamp" alt="Youth Leadership Bootcamp" class="w-full h-48 object-cover image-hover-effect"> 
+                    <div class="p-6"> 
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Leadership Bootcamp</h3> 
+                        <p class="text-gray-700">Empowering future leaders with essential skills and mentorship.</p> 
+                    </div> 
+                </div> 
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-animate scroll-reveal"> 
+                    <img src="images/EVENT 1.jpg" alt="Creative Arts Showcase" class="w-full h-48 object-cover image-hover-effect"> 
+                    <div class="p-6"> 
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Creative Arts Showcase</h3> 
+                        <p class="text-gray-700">Celebrating diverse artistic talents and cultural innovation.</p> 
+                    </div> 
+                </div> 
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-animate scroll-reveal"> 
+                    <img src="https://placehold.co/600x400/0A3D2F/D4AF37/png?text=Digital+Skills+Workshop" alt="Digital Skills Workshop" class="w-full h-48 object-cover image-hover-effect"> 
+                    <div class="p-6"> 
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Digital Skills Workshop</h3> 
+                        <p class="text-gray-700">Training youth in AI, coding, and digital entrepreneurship.</p> 
+                    </div> 
+                </div> 
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-animate scroll-reveal"> 
+                    <img src="images/EVENT COMMUNI.jpg" alt="Community Outreach" class="w-full h-48 object-cover image-hover-effect"> 
+                    <div class="p-6"> 
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Community Outreach</h3> 
+                        <p class="text-gray-700">Engaging with communities and promoting civic responsibility.</p> 
+                    </div> 
+                </div> 
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-animate scroll-reveal"> 
+                    <img src="images/EVENT 3.jpg" alt="Innovation Challenge" class="w-full h-48 object-cover image-hover-effect"> 
+                    <div class="p-6"> 
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Innovation Challenge</h3> 
+                        <p class="text-gray-700">Showcasing youth-led solutions to real-world problems.</p> 
+                    </div> 
+                </div> 
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-animate scroll-reveal"> 
+                    <img src="images/EVENT YOUTH.jpg" alt="Mentorship Session" class="w-full h-48 object-cover image-hover-effect"> 
+                    <div class="p-6"> 
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Mentorship Session</h3> 
+                        <p class="text-gray-700">Connecting youth with experienced mentors for guidance.</p> 
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+    </section> 
+
+    <section id="leadership" class="py-16 md:py-24 bg-ebba-dark-green text-white"> 
+        <div class="container mx-auto px-6 text-center"> 
+            <h2 class="text-4xl font-bold text-ebba-gold mb-12 scroll-reveal">Our Leadership</h2> 
+
+            <h3 class="text-3xl font-bold text-white mb-8 scroll-reveal">Board of Directors</h3> 
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"> 
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <img src="images/tatenda.jpg" alt="Dr. Tatenda Chekeche" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect"> 
+                    <h4 class="text-xl font-semibold text-ebba-gold">Dr. Tatenda Chekeche</h4> 
+                    <p class="text-lg">Chairperson of the Board</p> 
+                    <p class="text-sm text-gray-400">Contact: 0774496967</p> 
+                </div> 
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <img src="images/vitalis.webp" alt="Tinevimbonashe Vitalis Jera" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect"> 
+                    <h4 class="text-xl font-semibold text-ebba-gold">Tinevimbonashe Vitalis Jera</h4> 
+                    <p class="text-lg">Founder & Director General</p> 
+                    <p class="text-sm text-gray-400">Contact: 0718716013</p> 
+                </div> 
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <img src="images/tanatswa secretary.jpg" alt="Tanatswa Chinhara" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect"> 
+                    <h4 class="text-xl font-semibold text-ebba-gold">Tanatswa Chinhara</h4> 
+                    <p class="text-lg">Secretary General & Board Secretary</p> 
+                    <p class="text-sm text-gray-400">Contact: 0776904736</p> 
+                </div> 
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <img src="images/tsedo.jpg" alt="Ruvimbo A Masiko" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect"> 
+                    <h4 class="text-xl font-semibold text-ebba-gold">Ruvimbo A Masiko</h4> 
+                    <p class="text-lg">Treasurer</p> 
+                    <p class="text-sm text-gray-400">Contact: 0715001587</p> 
+                </div> 
+            </div> 
+
+            <h3 class="text-3xl font-bold text-white mb-8 scroll-reveal">Executive Committee</h3> 
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"> 
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <img src="images/ashley.jpg" alt="Tashinga Ashley Mudanda" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect"> 
+                    <h4 class="text-xl font-semibold text-ebba-gold">Tashinga Ashley Mudanda</h4> 
+                    <p class="text-lg">Advocacy & Communication Lead</p> 
+                    <p class="text-sm text-gray-400">Contact: 0719950829</p> 
+                </div> 
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <img src="images/myles.jpg" alt="Myles Takunda Moloten" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect"> 
+                    <h4 class="text-xl font-semibold text-ebba-gold">Myles Takunda Moloten</h4> 
+                    <p class="text-lg">Head of Youth Development & Empowerment Division</p> 
+                    <p class="text-sm text-gray-400">Contact: 0788707015</p> 
+                </div> 
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal"> 
+                    <img src="images/RAY.jpg" alt="Raymond Mutazu" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect"> 
+                    <h4 class="text-xl font-semibold text-ebba-gold">Raymond Mutazu</h4> 
+                    <p class="text-lg">Head of Creative & Cultural Innovation Division</p> 
+                    <p class="text-sm text-gray-400">Contact: 0788043082</p> 
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal">
+                    <img src="images/iyk.jpg" alt="Tashinga Iyke Mago" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect">
+                    <h4 class="text-xl font-semibold text-ebba-gold">Tashinga Iyke Mago</h4>
+                    <p class="text-lg">Program & Impact Lead</p>
+                    <p class="text-sm text-gray-400">Contact: 0786559519</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal">
+                    <img src="images/ADMIRE.jpg" alt="Admire Majachani" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect">
+                    <h4 class="text-xl font-semibold text-ebba-gold">Admire Majachani</h4>
+                    <p class="text-lg">Human Capital & Welfare Coordinator</p>
+                    <p class="text-sm text-gray-400">Contact: 0778081449</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal">
+                    <img src="images/charlie.jpg" alt="Tapiwa C Mangwende" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect">
+                    <h4 class="text-xl font-semibold text-ebba-gold">Tapiwa C Mangwende</h4>
+                    <p class="text-lg">Communication & Digital media committee</p>
+                    <p class="text-sm text-gray-400">Contact: 0777221218</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal">
+                    <img src="images/kuda.jpg" alt="Kudakwashe Makova" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect">
+                    <h4 class="text-xl font-semibold text-ebba-gold">Kudakwashe Makova</h4>
+                    <p class="text-lg">Strategic Partnerships & Grants Committee</p>
+                    <p class="text-sm text-gray-400">Contact: 0784910522</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal">
+                    <img src="https://placehold.co/150x150/D4AF37/0A3D2F/png?text=M.+Madutsa" alt="Matthew Madutsa" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect">
+                    <h4 class="text-xl font-semibold text-ebba-gold">Matthew Madutsa</h4>
+                    <p class="text-lg">Monitoring & Evaluation Officer (M&E)</p>
+                    <p class="text-sm text-gray-400">Contact: 0787830786</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md card-animate scroll-reveal">
+                    <img src="images/tino (1).jpg" alt="Philomena Tinotenda Njovana" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-ebba-gold object-cover image-hover-effect">
+                    <h4 class="text-xl font-semibold text-ebba-gold">Philomena Tinotenda Njovana</h4>
+                    <p class="text-lg">Brand Ambassador</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="membership" class="py-16 md:py-24 bg-gray-50">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-ebba-dark-green mb-12 scroll-reveal">Join the EBBA Family!</h2>
+            <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg card-animate scroll-reveal">
+                <p class="text-xl text-gray-700 mb-6">
+                    Are you a young, ambitious Zimbabwean aged between 13 and 30? Do you want to unlock your potential, connect with like-minded individuals, and contribute to national development?
+                    Then EBBA is the place for you!
+                </p>
+                <div class="mb-8">
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Membership Benefits:</h3>
+                    <ul class="list-disc list-inside text-lg text-gray-700 text-left mx-auto max-w-md">
+                        <li>Access to exclusive mentorship programs and workshops.</li>
+                        <li>Opportunities to showcase your talents in arts, innovation, and leadership.</li>
+                        <li>Networking with influential leaders and peers.</li>
+                        <li>Participation in impactful community development projects.</li>
+                        <li>Access to digital resources and entrepreneurship support.</li>
+                    </ul>
+                </div>
+                <p class="text-lg text-gray-800 font-semibold mb-6">
+                    A monthly membership subscription of <span class="text-ebba-gold font-bold">USD $2</span> contributes directly to our programs, digital tools, and administrative needs, as outlined in our constitution.
+                </p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfxXasj_XdKQVisNnC3zFN1d2mTssf5iD8s2Q5BMSBh5T9DuQ/viewform?usp=header" target="_blank" class="bg-ebba-dark-green text-white hover:bg-gray-800 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+                    Become an EBBA Member Today! <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+                <p class="text-sm text-gray-600 mt-4">
+                    (For members under 18, guardian consent is required as per our constitution.)
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-16 md:py-24 bg-ebba-dark-green text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-ebba-gold mb-12 scroll-reveal">Get in Touch</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                <div class="bg-gray-800 p-8 rounded-lg shadow-lg card-animate scroll-reveal">
+                    <h3 class="text-3xl font-bold mb-6 text-ebba-gold">Connect With Us</h3>
+                    <div class="space-y-4 text-left text-lg">
+                        <p><i class="fas fa-map-marker-alt text-ebba-gold mr-3"></i> 7th Way, Glen View 7, Harare, Zimbabwe</p>
+                        <p><i class="fas fa-envelope text-ebba-gold mr-3"></i> <a href="mailto:ebba.africa@gmail.com" class="hover:underline">ebba.africa@gmail.com</a></p>
+                        <p><i class="fas fa-phone-alt text-ebba-gold mr-3"></i> <a href="tel:+263718716013" class="hover:underline">+263 718 716 013 (Vitalis Jera, Director General)</a></p>
+                        <p><i class="fab fa-whatsapp text-ebba-gold mr-3"></i> <a href="https://wa.me/263718716013" target="_blank" class="hover:underline">WhatsApp Us</a></p>
+                    </div>
+                    <div class="flex justify-center md:justify-start space-x-6 mt-8">
+                        <a href="https://www.facebook.com/ebbayouthafrica?mibextid=ZbWKwL" target="_blank" class="text-white hover:text-ebba-gold transition duration-300 text-3xl" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a>
+                        <a href="https://www.instagram.com/ebbatrust?igsh=ZGhha2hpdGpjM3Mx" target="_blank" class="text-white hover:text-ebba-gold transition duration-300 text-3xl" aria-label="Instagram"><i class="fab fa-instagram-square"></i></a>
+                        <a href="https://www.tiktok.com/@ebbatrust?_t=ZN-8yNpZTSW5NG&_r=1" target="_blank" class="text-white hover:text-ebba-gold transition duration-300 text-3xl" aria-label="Tiktok"><i class="fab fa-Tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-8 rounded-lg shadow-lg card-animate scroll-reveal">
+                    <h3 class="text-3xl font-bold mb-6 text-ebba-gold">Send us a Message</h3>
+                    <form class="space-y-4 text-left">
+                        <div>
+                            <label for="name" class="block text-lg font-medium text-white mb-2">Your Name</label>
+                            <input type="text" id="name" name="name" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white focus:ring-ebba-gold focus:border-ebba-gold" placeholder="John Doe" required>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-lg font-medium text-white mb-2">Your Email</label>
+                            <input type="email" id="email" name="email" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white focus:ring-ebba-gold focus:border-ebba-gold" placeholder="john.doe@example.com" required>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-lg font-medium text-white mb-2">Your Message</label>
+                            <textarea id="message" name="message" rows="5" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white focus:ring-ebba-gold focus:border-ebba-gold" placeholder="Tell us about your query or idea..." required></textarea>
+                        </div>
+                        <button type="submit" class="bg-ebba-gold text-ebba-dark-green hover:bg-yellow-600 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 w-full">
+                            Send Message <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
+                <div class="flex items-center">
+                    <img src="images/Ebba.logo.png" alt="EBBA Logo" class="h-12 w-12 mr-4 rounded-full">
+                    <span class="text-3xl font-extrabold text-ebba-gold">EBBA</span>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="https://www.facebook.com/ebbayouthafrica?mibextid=ZbWKwL" target="_blank" class="text-white hover:text-ebba-gold transition duration-300 text-3xl" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a>
+                    <a href="https://www.instagram.com/ebbatrust?igsh=ZGhha2hpdGpjM3Mx" target="_blank" class="text-white hover:text-ebba-gold transition duration-300 text-3xl" aria-label="Instagram"><i class="fab fa-instagram-square"></i></a>
+                    <a href="https://www.tiktok.com/@ebbatrust?_t=ZN-8yNpZTSW5NG&_r=1" target="_blank" class="text-white hover:text-ebba-gold transition duration-300 text-3xl" aria-label="Tiktok"><i class="fab fa-Tiktok"></i></a>
+                    <a href="https://www.youtube.com/channel/UC-Y46fpLvg6rAuolTl40BBw" target="_blank" class="text-gray-400 hover:text-ebba-gold transition duration-300 text-2xl" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <p class="text-gray-400 text-md">© 2025 Elevated Beyond Building Africa (EBBA). All rights reserved.</p>
+            <p class="text-gray-500 text-sm mt-2">Designed with passion for the future of African youth.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('open');
+        });
+
+        // Close mobile menu when a link is clicked (already added inline, but good to have JS fallback)
+        document.querySelectorAll('#mobile-menu a').forEach(item => {
+            item.addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.remove('open');
+            });
+        });
+
+        // Scroll Reveal Effect
+        const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+
+        const observerOptions = {
+            threshold: 0.1 // When 10% of the element is visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Stop observing once visible
+                }
+            });
+        }, observerOptions);
+
+        scrollRevealElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Smooth scrolling for navigation links (already in CSS, but good for older browsers)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Dynamic date for copyright
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearSpan = document.querySelector('footer p.text-gray-400');
+            if (yearSpan) {
+                yearSpan.innerHTML = `© ${new Date().getFullYear()} Elevated Beyond Building Africa (EBBA). All rights reserved.`;
+            }
+        });
+    </script>
+</body>
+</html>

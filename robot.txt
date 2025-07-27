@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://EBBAafrica.github.io/ebba//sitemap.xml
